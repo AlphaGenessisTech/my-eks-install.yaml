@@ -1,0 +1,36 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: kongit
+  region: eu-west-1
+  version: "1.24"
+
+managedNodeGroups:
+- amiFamily: ubuntu
+  instanceType: t2.micro
+  name: myeks-node
+  desiredCapacity: 2
+  maxSize: 200
+  minSize: 2
+  labels:
+    alpha.eksctl.io/cluster-name: kongit
+    alpha.eksctl.io/nodegroup-name: myeks-node
+    intent: control-apps
+  tags:
+    alpha.eksctl.io/nodegroup-name: myeks-node
+    alpha.eksctl.io/nodegroup-type: managed
+    k8s.io/cluster-autoscaler/node-template/label/intent: control-apps
+  iam:
+    withAddonPolicies:
+    autoScaler: true
+    cloudWatch: true
+    albIngress: true
+  privateNetworking: true
+
+# To enable all of the control plane logs, uncomment below:
+# cloudWatch:
+#  clusterLogging:
+#    enableTypes: ["*"]
+
